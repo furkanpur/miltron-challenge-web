@@ -1,0 +1,211 @@
+<div fxLayout="row" fxLayoutGap="16px" style="margin: 16px 0 0 16px;">
+  <mat-card fxFlex="100" fxFlex.gt-lg="26" class="mat-elevation-z8">
+    <mat-card-title style="margin: 16px;">
+      <button mat-icon-button (click)="getRocketDataFromAPI()">
+        <mat-icon>refresh</mat-icon>
+      </button>
+      <span>Rocket Details</span>
+    </mat-card-title>
+
+    <mat-card-content>
+      <mat-progress-bar mode="indeterminate" *ngIf="isRocketLoading"></mat-progress-bar>
+
+      <table style="width:100%">
+        <tr>
+          <th>Id:</th>
+          <td>{{ rocketData?.id }}</td>
+        </tr>
+        <tr>
+          <th>Model:</th>
+          <td>{{ rocketData?.model }}</td>
+
+        </tr>
+        <tr>
+          <th>Description:</th>
+          <td>{{ rocketData?.payload?.description }}</td>
+        </tr>
+        <tr>
+          <th>Weight:</th>
+          <td>{{ rocketData?.payload?.weight }}</td>
+        </tr>
+      </table>
+
+      <table style="width:100%; margin-top: 16px">
+        <tr>
+          <th>Status:</th>
+          <td>
+            <mat-icon *ngIf="rocketData?.status === 'waiting'" matTooltip="Waiting">schedule</mat-icon>
+            <mat-icon *ngIf="rocketData?.status === 'launched'" matTooltip="Launched">rocket_launch</mat-icon>
+            <mat-icon *ngIf="rocketData?.status === 'deployed'" matTooltip="Deployed">check</mat-icon>
+            <mat-icon *ngIf="rocketData?.status === 'canceled'" matTooltip="Canceled">close</mat-icon>
+          </td>
+        </tr>
+
+        <tr>
+          <th>Launched at:</th>
+          <td>{{ (rocketData?.timestamps?.launched | date : "medium") || '-' }}</td>
+
+        </tr>
+        <tr>
+          <th>Deployed at:</th>
+          <td>{{ (rocketData?.timestamps?.deployed | date : "medium") || '-' }}</td>
+
+        </tr>
+        <tr>
+          <th>Failed at:</th>
+          <td>{{ (rocketData?.timestamps?.failed | date : "medium") || '-' }}</td>
+
+        </tr>
+        <tr>
+          <th>Canceled at:</th>
+          <td>{{ (rocketData?.timestamps?.cancelled | date : "medium") || '-' }}</td>
+
+        </tr>
+      </table>
+
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card fxFlex="100" fxFlex.gt-lg="26" class="mat-elevation-z8">
+    <mat-card-title style="margin: 16px;">
+      <button mat-icon-button (click)="getWeatherDataFromAPI()">
+        <mat-icon>refresh</mat-icon>
+      </button>
+      Weather
+    </mat-card-title>
+    <mat-card-content>
+      <mat-progress-bar mode="indeterminate" *ngIf="isWeatherLoading"></mat-progress-bar>
+
+      <table style="width:100%">
+        <tr>
+          <th>Pressure:</th>
+          <td>{{ weatherData?.pressure }}</td>
+        </tr>
+        <tr>
+          <th>Humidity:</th>
+          <td>{{ weatherData?.humidity }}</td>
+
+        </tr>
+        <tr>
+          <th>Time:</th>
+          <td>{{ weatherData?.time }}</td>
+        </tr>
+        <tr>
+          <th>Temperature:</th>
+          <td>{{ weatherData?.temperature }}</td>
+        </tr>
+      </table>
+
+      <table style="width:100%; margin-top: 16px;">
+        <tr>
+          <th>Wind Angle:</th>
+          <td>{{ weatherData?.wind?.angle }}</td>
+        </tr>
+        <tr>
+          <th>Wind Speed:</th>
+          <td>{{ weatherData?.wind?.speed }}</td>
+        </tr>
+        <tr>
+          <th>Wind Direction:</th>
+          <td>{{ weatherData?.wind?.direction }}</td>
+        </tr>
+      </table>
+
+      <table style="width:100%; margin-top: 16px;">
+        <tr>
+          <th>Hail:</th>
+          <td>
+            <mat-icon *ngIf="weatherData?.precipitation?.hail">check</mat-icon>
+            <mat-icon *ngIf="!weatherData?.precipitation?.hail">close</mat-icon>
+          </td>
+        </tr>
+        <tr>
+          <th>Rain:</th>
+          <td>
+            <mat-icon *ngIf="weatherData?.precipitation?.rain">check</mat-icon>
+            <mat-icon *ngIf="!weatherData?.precipitation?.rain">close</mat-icon>
+          </td>
+        </tr>
+        <tr>
+          <th>Snow:</th>
+          <td>
+            <mat-icon *ngIf="weatherData?.precipitation?.snow">check</mat-icon>
+            <mat-icon *ngIf="!weatherData?.precipitation?.snow">close</mat-icon>
+          </td>
+        </tr>
+        <tr>
+          <th>Sleet:</th>
+          <td>
+            <mat-icon *ngIf="weatherData?.precipitation?.sleet">check</mat-icon>
+            <mat-icon *ngIf="!weatherData?.precipitation?.sleet">close</mat-icon>
+          </td>
+        </tr>
+        <tr>
+          <th>Probability:</th>
+          <td>
+            {{ weatherData?.precipitation?.probability }}
+          </td>
+        </tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<div fxLayout="row" fxLayoutGap="16px" style="margin: 16px 0 0 16px;">
+  <mat-card fxFlex="20" fxFlex.gt-lg="10" class="mat-elevation-z8">
+    <mat-card-title style="margin: 16px;">Altitude</mat-card-title>
+    <mat-card-content>
+      <h2>{{ telemetryData?.altitude?.toFixed(4) }}</h2>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card fxFlex="20" fxFlex.gt-lg="10" class="mat-elevation-z8">
+    <mat-card-title style="margin: 16px;">Acceleration</mat-card-title>
+    <mat-card-content>
+      <h2>{{ telemetryData?.acceleration?.toFixed(4) }}</h2>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card fxFlex="20" fxFlex.gt-lg="10" class="mat-elevation-z8">
+    <mat-card-title style="margin: 16px;">Speed</mat-card-title>
+    <mat-card-content>
+      <h2>{{ telemetryData?.speed?.toFixed(4) }}</h2>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card fxFlex="20" fxFlex.gt-lg="10" class="mat-elevation-z8">
+    <mat-card-title style="margin: 16px;">Thrust</mat-card-title>
+    <mat-card-content>
+      <h2>{{ telemetryData?.thrust?.toFixed(4) }}</h2>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card fxFlex="20" fxFlex.gt-lg="10" class="mat-elevation-z8">
+    <mat-card-title style="margin: 16px;">Temperature</mat-card-title>
+    <mat-card-content>
+      <h2>{{ telemetryData?.temperature?.toFixed(4) }}</h2>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<div fxLayout="row" fxLayoutGap="16px" style="margin: 16px 0 0 16px;">
+  <button mat-raised-button [disabled]="isControlLoading" color="primary" (click)="launchRocket()">
+    <mat-icon *ngIf="isControlLoading">
+      <mat-spinner [diameter]="18" color="warn"></mat-spinner>
+    </mat-icon>
+    Launch
+  </button>
+  <button mat-raised-button [disabled]="isControlLoading" color="primary" (click)="deployRocket()">
+    <mat-icon *ngIf="isControlLoading">
+      <mat-spinner [diameter]="18" color="warn"></mat-spinner>
+    </mat-icon>
+    Deploy
+  </button>
+
+  <button mat-raised-button [disabled]="isControlLoading" color="warn" (click)="cancelRocket()">
+    <mat-icon *ngIf="isControlLoading">
+      <mat-spinner [diameter]="18" color="warn"></mat-spinner>
+    </mat-icon>
+    Cancel
+  </button>
+</div>
